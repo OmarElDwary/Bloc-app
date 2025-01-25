@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blocs/views/counter/counter_bloc.dart';
+import 'package:flutter_blocs/views/counter/counter_cubit.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -8,11 +8,21 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<CounterBloc, CounterState>(
+      body: BlocConsumer<CounterCubit, CounterState>(
         listener: (context, state) {
+          if (state.counter < 0) {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      content: Text('The value is negative'),
+                    ));
+          }
           if (state.counter == 10) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text('Counter Reached 10')));
+          } else if (state.counter == -10) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Counter Reached -10')));
           }
         },
         builder: (context, state) {
@@ -29,12 +39,12 @@ class MyHomePage extends StatelessWidget {
                   children: [
                     IconButton(
                         onPressed: () {
-                          context.read<CounterBloc>().add(IncrementEvent());
+                          context.read<CounterCubit>().incrementCount();
                         },
                         icon: Icon(Icons.add)),
                     IconButton(
                         onPressed: () {
-                          context.read<CounterBloc>().add(DecrementEvent());
+                          context.read<CounterCubit>().decrementCount();
                         },
                         icon: Icon(Icons.remove))
                   ],

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blocs/views/counter/counter_bloc.dart';
+import 'package:flutter_blocs/views/counter/counter_cubit.dart';
+import 'package:flutter_blocs/views/themes/theme_cubit.dart';
 import 'package:flutter_blocs/views/themes/app_themes.dart';
-import 'package:flutter_blocs/views/themes/theme_bloc.dart';
 
-import '../screens/home_page.dart';
+import 'views/screens/home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,28 +15,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ThemeBloc()),
-        BlocProvider(create: (_) => CounterBloc()),
+        BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_) => CounterCubit()),
       ],
-      child: BlocBuilder<ThemeBloc, ThemeState>(
+      child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
           return MaterialApp(
-            theme: themeState.theme,
+            theme: appThemes[themeState.currentTheme],
             home: Scaffold(
               appBar: AppBar(title: Text('Bloc App'), actions: [
                 Row(
                   children: [
                     Icon(Icons.light_mode_outlined),
                     Switch(
-                      value: themeState.currentTheme == AppTheme.LightMode,
+                      value: context.read<ThemeCubit>().state.currentTheme ==
+                          AppTheme.LightMode,
                       onChanged: (isDarkMode) {
-                        // Toggle the theme
                         final newTheme =
-                            isDarkMode ? AppTheme.DarkMode : AppTheme.LightMode;
+                            isDarkMode ? AppTheme.LightMode : AppTheme.DarkMode;
 
-                        context.read<ThemeBloc>().add(
-                              ThemeToggled(theme: newTheme),
-                            );
+                        context.read<ThemeCubit>().toggleTheme(newTheme);
                       },
                     ),
                     Icon(Icons.dark_mode_outlined)

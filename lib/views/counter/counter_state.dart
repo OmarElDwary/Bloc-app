@@ -1,7 +1,7 @@
-part of 'counter_bloc.dart';
+part of 'counter_cubit.dart';
 
 @immutable
-class CounterState {
+abstract class CounterState {
   final int counter;
 
   CounterState(this.counter);
@@ -9,7 +9,8 @@ class CounterState {
 
 class CounterInitial extends CounterState {
   CounterInitial() : super(0);
+}
 
-  @override
-  String toString() => '$counter';
+class CounterStateChange extends CounterState {
+  CounterStateChange(int counter) : super(counter);
 }

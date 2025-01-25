@@ -1,17 +1,7 @@
-part of 'theme_bloc.dart';
+part of 'theme_cubit.dart';
 
-@immutable
-abstract class ThemeState {
-  final ThemeData theme;
+class ThemeState {
   final AppTheme currentTheme;
 
-  ThemeState(this.theme, this.currentTheme);
-}
-
-class ThemeInitial extends ThemeState {
-  ThemeInitial() : super(appThemes[AppTheme.LightMode]!, AppTheme.LightMode);
-}
-
-class ThemeChanged extends ThemeState {
-  ThemeChanged(super.theme, super.currentTheme);
+  ThemeState(this.currentTheme);
 }
